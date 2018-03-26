@@ -63,7 +63,7 @@ https://github.com/sorah/envchain
 https://gnupg.org/
 
 ```
-# OSX, others see: https://gnupg.org/download/
+# OSX. Others see: https://gnupg.org/download/
 brew install gpg
 ```
 
@@ -74,7 +74,7 @@ https://www.passwordstore.org/
 echo 'export PASSWORD_STORE_DIR=~/.password-store' >> ~/.bashrc
 . ~/.bashrc
 
-# OSX, others see: https://www.passwordstore.org/
+# OSX. Others see: https://www.passwordstore.org/
 brew install pass
 echo "source /usr/local/etc/bash_completion.d/pass" >> ~/.bashrc
 ```
@@ -115,7 +115,7 @@ pass show AWS_DEFAULT_REGION
 https://www.terraform.io/intro/getting-started/install.html
 
 ```
-# OSX, others see: https://www.terraform.io/intro/getting-started/install.html
+# OSX. Others see: https://www.terraform.io/intro/getting-started/install.html
 brew install terraform
 ```
 
@@ -124,7 +124,7 @@ https://github.com/nsbno/cloud-tools
 
 #### Install Go
 ```
-OSX, others see: https://golang.org/doc/install#install
+# OSX. Others see: https://golang.org/doc/install#install
 brew install go
 ```
 
@@ -153,7 +153,7 @@ cd $GOPATH/src/github.com/nsbno/cloud-tools
 ### Install additional tools
 
 ```
-brew install s3cmd # OSX, others see: https://tecadmin.net/install-s3cmd-manage-amazon-s3-buckets/
+brew install s3cmd # OSX. Others see: https://tecadmin.net/install-s3cmd-manage-amazon-s3-buckets/
 sudo easy_install pip # You may have to install Python, easy_install and pip
 pip install awscli awsebcli
 ```
