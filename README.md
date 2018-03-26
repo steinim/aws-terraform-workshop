@@ -2,7 +2,7 @@
 
 **Provisioning AWS Infrastructure for Security and Continuous Delivery with Terraform and Elastic Beanstalk**
 
-In this workshop you will learn how to provision infrastructure in AWS using tools for automating everything. We will cover how to use Terraform for provisioning basic infrastructure on AWS, including VPCs, networking, security groups (firewall’ish) and deployment of applications on Elastic Beanstalk in an autoscaled and load balanced environment. We will also set up a hosted database and a bastion host (jump host) for connecting to servers inside your private subnet. As a bonus you will learn how to handle secrets when working in an environment built for continuous delivery.
+In this workshop you will learn how to provision infrastructure in AWS using tools for automating everything. We will cover how to use Terraform for provisioning basic infrastructure on AWS, including VPCs, networking, security groups (firewall'ish) and deployment of applications on Elastic Beanstalk in an autoscaled and load balanced environment. We will also set up a hosted database and a bastion host (jump host) for connecting to servers inside your private subnet. As a bonus you will learn how to handle secrets when working in an environment built for continuous delivery.
 
 Slides: https://steinim.github.io/slides/aws-terraform-workshop/
 
@@ -27,9 +27,9 @@ Go to: https://console.aws.amazon.com/iam/home?region=eu-west-2#/users
 
 1. Click on your newly created user
 2. Go to `Security Credentials` and upload your SSH public key under `SSH keys for AWS CodeCommit`
-   ```
-   cat ~/.ssh/id_rsa.pub | pbcopy
-   ``` 
+```
+cat ~/.ssh/id_rsa.pub | pbcopy
+``` 
 
 ### Create you AWS API credentials
 
@@ -159,44 +159,44 @@ git checkout start
 
 1. Go to `infrastructure/test`
 2. Create a s3 bucket for you remote state
-   ```
-   envchain aws s3cmd --region eu-west-2 mb s3://<unique-bucket-name>
-   ```
+```
+envchain aws s3cmd --region eu-west-2 mb s3://<unique-bucket-name>
+```
 3. Create the following files
-   ```
-   # backend.tf
-   terraform {
-     backend "s3" {
-       bucket = "<unique-bucket-name>"
-       key    = "infrastructure/test/terraform.tfstate"
-       region = "eu-west-2"
-     }
-   }
+```
+# backend.tf
+terraform {
+  backend "s3" {
+    bucket = "<unique-bucket-name>"
+    key    = "infrastructure/test/terraform.tfstate"
+    region = "eu-west-2"
+  }
+}
 
-   # main.tf
-   provider "aws" {
-     region = "${var.region}"
-   }
+# main.tf
+provider "aws" {
+  region = "${var.region}"
+}
  
-   # vars.tf
-   variable "region" { default = "eu-west-2" }
-   ```
+# vars.tf
+variable "region" { default = "eu-west-2" }
+```
 4. Initialize the backend
-   ```
-   envchain aws terraform init
-   ```
-   (You may have to wait a while for the S3 bucket to become available)
+```
+envchain aws terraform init
+```
+(You may have to wait a while for the S3 bucket to become available)
 5. Create the following file
-   ```
-   # cloud-config.yml
-   vars:
-     - name: TF_VAR_env
-       value: test
-   ```
+```
+# cloud-config.yml
+vars:
+  - name: TF_VAR_env
+    value: test
+```
 6. Plan
-   ```bash
-   envchain aws terraform-wrapper plan
-   ```
+```bash
+envchain aws terraform-wrapper plan
+```
 
 # Task 2
 In this task we will create a VPC
