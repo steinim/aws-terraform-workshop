@@ -297,11 +297,11 @@ envchain aws terraform get --update # OSX
 
 ```
 # OSX
-envchain aws terraform-wrapper plan # OSX
-envchain aws terraform-wrapper apply # OSX
+envchain aws terraform-wrapper plan
+envchain aws terraform-wrapper apply
 # Linux
-../../env.sh terraform-wrapper plan # Linux
-../../env.sh terraform-wrapper apply # Linux
+../../env.sh terraform-wrapper plan
+../../env.sh terraform-wrapper apply
 
 ```
 
