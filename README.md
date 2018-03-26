@@ -111,13 +111,8 @@ sudo easy_install pip
 pip install awscli awsebcli ansible
 ```
 
-### Test it!
+# Task 1
+In this task we will initialize the Terraform environment.
 
-Run the following commands in a terraform base directory to check if it works.
-
-```
-envchain aws terraform get --update
-envchain aws terraform init
-envchain aws terraform-wrapper plan
-```
-
+1. Go to `infrastructure/test1`
+2. 
