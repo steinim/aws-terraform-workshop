@@ -157,7 +157,7 @@ git checkout start
 
 1. Go to `infrastructure/test`
 2. Create a s3 bucket for you remote state
-   `envchain aws s3cmd --region eu-west-2 mb s3://<unique-bucket-name>`
+   ```envchain aws s3cmd --region eu-west-2 mb s3://<unique-bucket-name>```
 2. Create the following files
    ```
    # backend.tf
