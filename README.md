@@ -27,9 +27,9 @@ Go to: https://console.aws.amazon.com/iam/home?region=eu-west-2#/users
 
 1. Click on your newly created user
 2. Go to `Security Credentials` and upload your SSH public key under `SSH keys for AWS CodeCommit`
-```bash
-cat ~/.ssh/id_rsa.pub | pbcopy
-``` 
+   ```bash
+   cat ~/.ssh/id_rsa.pub | pbcopy
+   ``` 
 
 ### Create you AWS API credentials
 
@@ -164,19 +164,18 @@ In this task we will initialize the Terraform environment.
        region = "eu-west-2"
      }
    }
-```
-```bash
-# main.tf
-provider "aws" {
-  region = "${var.region}"
-}
-```
-```bash
-# vars.tf
-variable "region" { default = "eu-west-2" }
-```
+   ```
+   ```bash
+   # main.tf
+   provider "aws" {
+     region = "${var.region}"
+   }
+   ```
+   ```bash
+   # vars.tf
+   variable "region" { default = "eu-west-2" }
+   ```
 3. Initialize the backend
-```hcl
-envchain aws terraform init
-```
-```
+   ```hcl
+   envchain aws terraform init
+   ```
