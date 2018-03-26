@@ -193,7 +193,8 @@ provider "aws" {
 
 ```
 # vars.tf
-variable "region" { default = "eu-west-2" }
+variable "region" {}
+variable "env" {}
 ```
 
 4. Initialize the backend
@@ -210,6 +211,8 @@ envchain aws terraform init # OSX
 vars:
   - name: TF_VAR_env
     value: test
+  - name: TF_VAR_region
+    value: eu-west-2
 ```
 
 6. Plan
@@ -225,6 +228,80 @@ git checkout task1
 ```
 
 # Task 2
-In this task we will create a VPC
+In this task we will create a VPC, an internet gateway and grant the VPC internet access on its main route table.
 
+<p>
+<details>
+<summary><strong>VPC module</strong> `infrastructure/modules/vpc/`</summary>
+
+```
+# main.tf
+resource "aws_vpc" "vpc" {
+    cidr_block           = "${var.vpc_cidr}"
+    enable_dns_hostnames = "${var.enable_dns_hostnames}"
+    tags { Name = "${var.vpc_name}" }
+}
+
+# Create an internet gateway
+resource "aws_internet_gateway" "ig" {
+    vpc_id = "${aws_vpc.vpc.id}"
+    tags { Name = "${var.ig_name}" }
+}
+
+# Grant the VPC internet access on its main route table
+resource "aws_route" "internet_access_route" {
+  route_table_id         = "${aws_vpc.vpc.main_route_table_id}"
+  destination_cidr_block = "${var.route_destination_cidr_block}"
+  gateway_id             = "${aws_internet_gateway.ig.id}"
+}
+
+---
+
+# vars.tf
+variable "aws_region" {}
+variable "vpc_name" {}
+variable "enable_dns_hostnames" { default = "true" }
+variable "ig_name" {}
+variable "vpc_cidr" {}
+variable "route_destination_cidr_block" { default = "0.0.0.0/0" }
+
+```
+</details>
+</p>
+
+<p>
+<details>
+<summary><strong>VPC project</strong> `infrastructure/test/`</summary>
+
+```
+# main.tf
+---
+module "vpc" {
+  source     = "../modules/vpc"
+  aws_region = "${var.region}"
+  vpc_name   = "${var.env}_vpc"
+  vpc_cidr   = "10.0.0.0/16"
+  ig_name    = "${var.env}_ig"
+}
+```
+</details>
+</p>
+
+## Update modules
+```
+envchain aws terraform get --update # OSX
+../../env.sh terraform get --update # Linux
+
+```
+## Plan and apply
+
+```
+# OSX
+envchain aws terraform-wrapper plan
+envchain aws terraform-wrapper apply
+# Linux
+../../env.sh terraform-wrapper plan
+../../env.sh terraform-wrapper apply
+
+```
 
