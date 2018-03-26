@@ -38,11 +38,11 @@ Go to: https://console.aws.amazon.com/iam/home?region=eu-west-2#/users
 3. Copy your credentials to a file or download the .csv file (**NB!** You will only see your secret key once)
 
 ### Install homebrew (OS X users only)
+https://brew.sh/
 ```
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 brew update
 ```
-https://brew.sh/
 
 ### Store your AWS credentials and region to your keychain (OS X users only)
 ```bash
@@ -61,16 +61,15 @@ brew install gpg
 ```
 
 ### Install `pass`
+https://www.passwordstore.org/
 ```bash
 echo 'export PASSWORD_STORE_DIR=~/.password-store' >> ~/.bashrc
 . ~/.bashrc
 brew install pass
 pass init
 ```
-https://www.passwordstore.org/
 
 #### Configure `pass`
-
 ```
 gpg --full-generate-key # Accept all defaults
 gpg --list-secret-keys --keyid-format LONG
@@ -86,7 +85,6 @@ ssb   4096R/42B317FD4BA89E7A 2016-03-10
 ```
 
 Paste the text below, substituting in the GPG key ID you'd like to use. In this example, the GPG key ID is 3AA5C34371567BD2:
-
 ```
 pass init 3AA5C34371567BD2
 ```
