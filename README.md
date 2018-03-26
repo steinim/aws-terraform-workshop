@@ -27,7 +27,9 @@ Go to: https://console.aws.amazon.com/iam/home?region=eu-west-2#/users
 
 1. Click on your newly created user
 2. Go to `Security Credentials` and upload your SSH public key under `SSH keys for AWS CodeCommit`
-```cat ~/.ssh/id_rsa.pub | pbcopy``` 
+```bash
+cat ~/.ssh/id_rsa.pub | pbcopy
+``` 
 
 ### Create you AWS API credentials
 
@@ -39,7 +41,7 @@ Go to: https://console.aws.amazon.com/iam/home?region=eu-west-2#/users
 
 ### Install homebrew (OS X users only)
 https://brew.sh/
-```
+```bash
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 brew update
 ```
@@ -56,7 +58,7 @@ https://github.com/sorah/envchain
 
 ### Install `gpg`
 https://gnupg.org/
-```
+```bash
 brew install gpg
 ```
 
@@ -70,13 +72,13 @@ pass init
 ```
 
 #### Configure `pass`
-```
+```bash
 gpg --full-generate-key # Accept all defaults
 gpg --list-secret-keys --keyid-format LONG
 ```
 
 From the list of GPG keys, copy the GPG key ID you'd like to use. In this example, the GPG key ID is 3AA5C34371567BD2:
-```
+```bash
 gpg --list-secret-keys --keyid-format LONG
 
 sec   4096R/3AA5C34371567BD2 2016-03-10 [expires: 2017-03-10]
@@ -85,7 +87,7 @@ ssb   4096R/42B317FD4BA89E7A 2016-03-10
 ```
 
 Paste the text below, substituting in the GPG key ID you'd like to use. In this example, the GPG key ID is 3AA5C34371567BD2:
-```
+```bash
 pass init 3AA5C34371567BD2
 ```
 
@@ -97,7 +99,9 @@ pass add AWS_DEFAULT_REGION
 ```
 
 #### Test it!
-```pass show AWS_DEFAULT_REGION```
+```bash
+pass show AWS_DEFAULT_REGION
+```
 
 ### Install Terraform
 ```bash
@@ -138,7 +142,7 @@ cd $GOPATH/src/github.com/nsbno/cloud-tools
 
 ### Install additional tools
 
-```
+```bash
 brew install s3cmd
 sudo easy_install pip
 pip install awscli awsebcli ansible
@@ -151,5 +155,5 @@ In this task we will initialize the Terraform environment.
 
 1. Go to `infrastructure/test1`
 2. Create a new file `cloud-config.yml` with the following content
-```
+```bash
 ```
