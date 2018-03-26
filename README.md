@@ -208,5 +208,13 @@ vars:
 envchain aws terraform-wrapper plan
 ```
 
+## Solution:
+
+```
+git checkout task1
+```
+
 # Task 2
 In this task we will create a VPC
+
+
