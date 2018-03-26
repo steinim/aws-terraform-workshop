@@ -158,7 +158,7 @@ sudo easy_install pip # You may have to install Python, easy_install and pip
 pip install awscli awsebcli
 ```
 
-# Task 1
+# Task 1 - Getting started
 In this task we will initialize the Terraform environment and run our first plan
 
 ```
@@ -227,7 +227,7 @@ envchain aws terraform-wrapper plan # OSX
 git checkout task1
 ```
 
-# Task 2
+# Task 2 - VPC
 In this task we will create a VPC, an internet gateway and grant the VPC internet access on its main route table.
 
 <p>
@@ -305,3 +305,20 @@ envchain aws terraform-wrapper apply
 
 ```
 
+## Solution:
+
+```
+git checkout task2
+```
+
+# Task 3 - Networking
+In this task we will set up software defined networking (SDN) with route tables, NAT and subnets.
+
+<p>
+<details>
+<summary><strong>Routing</strong> `infrastructure/modules/route-table/`</summary>
+  ```
+  yada
+  ```
+</details>
+</p>
