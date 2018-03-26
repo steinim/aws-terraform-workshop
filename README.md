@@ -77,7 +77,7 @@ gpg --full-generate-key # Accept all defaults
 gpg --list-secret-keys --keyid-format LONG
 ```
 
-From the list of GPG keys, copy the GPG key ID you'd like to use. In this example, the GPG key ID is 3AA5C34371567BD2:
+From the list of GPG keys, copy the GPG key ID you'd like to use. In this example, the GPG key ID is `3AA5C34371567BD2`:
 ```bash
 gpg --list-secret-keys --keyid-format LONG
 
@@ -86,7 +86,7 @@ uid                          Hubot
 ssb   4096R/42B317FD4BA89E7A 2016-03-10
 ```
 
-Paste the text below, substituting in the GPG key ID you'd like to use. In this example, the GPG key ID is 3AA5C34371567BD2:
+Paste the text below, substituting in the GPG key ID you'd like to use. In this example, the GPG key ID is `3AA5C34371567BD2`:
 ```bash
 pass init 3AA5C34371567BD2
 ```
