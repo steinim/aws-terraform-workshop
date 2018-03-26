@@ -8,6 +8,9 @@ Slides: https://steinim.github.io/slides/aws-terraform-workshop/
 
 ## Preparations
 
+### Required
+Mac OSX (preferable) or Linux. If you have a Windows machine, please set up a Linux virtual machine. You can use [Vagrant](https://www.vagrantup.com/) for this.
+
 ### Create a free new AWS account
 
 Go to: https://aws.amazon.com/free and sign up for a free account.
