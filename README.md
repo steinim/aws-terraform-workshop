@@ -54,9 +54,33 @@ envchain --set aws AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_DEFAULT_REGION
 
 https://github.com/sorah/envchain
 
+### Install and configure `gpg`
+```
+brew install gpg
+gpg --full-generate-key # Accept all defaults
+gpg --list-secret-keys --keyid-format LONG
+```
+From the list of GPG keys, copy the GPG key ID you'd like to use. In this example, the GPG key ID is 3AA5C34371567BD2:
+
+gpg --list-secret-keys --keyid-format LONG
+```
+sec   4096R/3AA5C34371567BD2 2016-03-10 [expires: 2017-03-10]
+uid                          Hubot 
+ssb   4096R/42B317FD4BA89E7A 2016-03-10
+```
+
+Paste the text below, substituting in the GPG key ID you'd like to use. In this example, the GPG key ID is 3AA5C34371567BD2:
+
+```
+pass init 3AA5C34371567BD2
+```
+
 ### Install `pass`
 ```bash
+echo 'export PASSWORD_STORE_DIR=~/.password-store' >> ~/.bashrc
+. ~/.bashrc
 brew install pass
+pass init
 ```
 https://www.passwordstore.org/
 
@@ -66,6 +90,9 @@ pass add AWS_ACCESS_KEY_ID
 pass add AWS_SECRET_ACCESS_KEY
 pass add AWS_DEFAULT_REGION
 ```
+
+#### Test it!
+```pass show AWS_DEFAULT_REGION```
 
 ### Install Terraform
 ```bash
@@ -96,7 +123,7 @@ export PATH
 #### Set up developer environment
 
 ```bash
-source ~/.bashrc
+. ~/.bashrc
 mkdir -p $GOPATH/{bin,pkg,src/github.com/nsbno,vendor}
 go get github.com/nsbno/cloud-tools # Ignore the warning message
 cd $GOPATH/src/github.com/nsbno/cloud-tools
