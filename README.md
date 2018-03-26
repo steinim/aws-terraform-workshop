@@ -161,7 +161,7 @@ git checkout start
    envchain aws s3cmd --region eu-west-2 mb s3://<unique-bucket-name>
    ``` 
 2. Create the following files
-   ```hcl
+   ```
    # backend.tf
    terraform {
      backend "s3" {
@@ -185,8 +185,9 @@ git checkout start
    ```
    (You may have to wait a while for the S3 bucket to become available)
 4. Create the following file
-   ```yml
+   ```
    # cloud-config.yml
+   vars:
      - name: TF_VAR_env
        value: test
    ```
