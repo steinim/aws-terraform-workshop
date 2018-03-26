@@ -27,7 +27,7 @@ Go to: https://console.aws.amazon.com/iam/home?region=eu-west-2#/users
 
 1. Click on your newly created user
 2. Go to `Security Credentials` and upload your SSH public key under `SSH keys for AWS CodeCommit`
-   ```bash
+   ```
    cat ~/.ssh/id_rsa.pub | pbcopy
    ``` 
 
@@ -41,13 +41,13 @@ Go to: https://console.aws.amazon.com/iam/home?region=eu-west-2#/users
 
 ### Install homebrew (OS X users only)
 https://brew.sh/
-```bash
+```
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 brew update
 ```
 
 ### Store your AWS credentials and region to your keychain (OS X users only)
-```bash
+```
 brew install envchain
 envchain --set aws AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_DEFAULT_REGION
 ```
@@ -58,13 +58,15 @@ https://github.com/sorah/envchain
 
 ### Install `gpg`
 https://gnupg.org/
-```bash
+
+```
 brew install gpg
 ```
 
 ### Install `pass`
 https://www.passwordstore.org/
-```bash
+
+```
 echo 'export PASSWORD_STORE_DIR=~/.password-store' >> ~/.bashrc
 . ~/.bashrc
 brew install pass
@@ -72,13 +74,13 @@ pass init
 ```
 
 #### Configure `pass`
-```bash
+```
 gpg --full-generate-key # Accept all defaults
 gpg --list-secret-keys --keyid-format LONG
 ```
 
 From the list of GPG keys, copy the GPG key ID you'd like to use. In this example, the GPG key ID is `3AA5C34371567BD2`:
-```bash
+```
 gpg --list-secret-keys --keyid-format LONG
 
 sec   4096R/3AA5C34371567BD2 2016-03-10 [expires: 2017-03-10]
@@ -87,40 +89,40 @@ ssb   4096R/42B317FD4BA89E7A 2016-03-10
 ```
 
 Paste the text below, substituting in the GPG key ID you'd like to use. In this example, the GPG key ID is `3AA5C34371567BD2`:
-```bash
+```
 pass init 3AA5C34371567BD2
 ```
 
 #### Store your keys and region in pass
-```bash
+```
 pass add AWS_ACCESS_KEY_ID
 pass add AWS_SECRET_ACCESS_KEY
 pass add AWS_DEFAULT_REGION
 ```
 
 #### Test it!
-```bash
+```
 pass show AWS_DEFAULT_REGION
 ```
 
 ### Install Terraform
-```bash
+https://www.terraform.io/intro/getting-started/install.html
+
+```
 brew install terraform
 ```
-https://www.terraform.io/intro/getting-started/install.html
 
 ### Install Terraform wrapper
 https://github.com/nsbno/cloud-tools
 
 #### Install Go
-
-```bash
+```
 brew install go
 ```
 
 Add the following to your `.bashrc`
 
-```bash
+```
 export GOPATH=<path-to-your-sourcecode>/go
 export GOBIN=$GOPATH/bin
 PATH=$GOBIN:$PATH
@@ -131,7 +133,7 @@ export PATH
 
 #### Set up developer environment
 
-```bash
+```
 . ~/.bashrc
 mkdir -p $GOPATH/{bin,pkg,src/github.com/nsbno,vendor}
 go get github.com/nsbno/cloud-tools # Ignore the warning message
@@ -142,7 +144,7 @@ cd $GOPATH/src/github.com/nsbno/cloud-tools
 
 ### Install additional tools
 
-```bash
+```
 brew install s3cmd
 sudo easy_install pip
 pip install awscli awsebcli
@@ -151,16 +153,16 @@ pip install awscli awsebcli
 # Task 1
 In this task we will initialize the Terraform environment and run our first plan
 
-```bash
+```
 git checkout start
 ```
 
 1. Go to `infrastructure/test`
 2. Create a s3 bucket for you remote state
-   ```bash
+   ```
    envchain aws s3cmd --region eu-west-2 mb s3://<unique-bucket-name>
    ```
-2. Create the following files
+3. Create the following files
    ```
    # backend.tf
    terraform {
@@ -179,19 +181,19 @@ git checkout start
    # vars.tf
    variable "region" { default = "eu-west-2" }
    ```
-3. Initialize the backend
-   ```bash
+4. Initialize the backend
+   ```
    envchain aws terraform init
    ```
    (You may have to wait a while for the S3 bucket to become available)
-4. Create the following file
+5. Create the following file
    ```
    # cloud-config.yml
    vars:
      - name: TF_VAR_env
        value: test
    ```
-5. Plan
+6. Plan
    ```bash
    envchain aws terraform-wrapper plan
    ```
