@@ -145,7 +145,7 @@ cd $GOPATH/src/github.com/nsbno/cloud-tools
 ```bash
 brew install s3cmd
 sudo easy_install pip
-pip install awscli awsebcli ansible
+pip install awscli awsebcli
 ```
 
 # Task 1
