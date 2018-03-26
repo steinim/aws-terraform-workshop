@@ -153,16 +153,27 @@ In this task we will initialize the Terraform environment.
 
 `git checkout start`
 
-1. Go to `infrastructure/test1`
-2. Create a new file `backend.tf` with the following content
+1. Go to `infrastructure/test`
+2. Create the following files
+   ```bash
+   # backend.tf
+   terraform {
+     backend "s3" {
+       bucket = "terraform-state"
+       key    = "infrastructure/test/terraform.tfstate"
+       region = "eu-west-2"
+     }
+   }
+```
 ```bash
-terraform {
-  backend "s3" {
-    bucket = "terraform-state"
-    key    = "infrastructure/test/terraform.tfstate"
-    region = "eu-west-2"
-  }
+# main.tf
+provider "aws" {
+  region = "${var.region}"
 }
+```
+```bash
+# vars.tf
+variable "region" { default = "eu-west-2" }
 ```
 3. Initialize the backend
 ```hcl
