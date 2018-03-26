@@ -63,6 +63,7 @@ https://github.com/sorah/envchain
 https://gnupg.org/
 
 ```
+# OSX, others see: https://gnupg.org/download/
 brew install gpg
 ```
 
@@ -72,7 +73,10 @@ https://www.passwordstore.org/
 ```
 echo 'export PASSWORD_STORE_DIR=~/.password-store' >> ~/.bashrc
 . ~/.bashrc
+
+# OSX, others see: https://www.passwordstore.org/
 brew install pass
+echo "source /usr/local/etc/bash_completion.d/pass" >> ~/.bashrc
 ```
 
 #### Configure `pass`
@@ -111,6 +115,7 @@ pass show AWS_DEFAULT_REGION
 https://www.terraform.io/intro/getting-started/install.html
 
 ```
+# OSX, others see: https://www.terraform.io/intro/getting-started/install.html
 brew install terraform
 ```
 
@@ -119,6 +124,7 @@ https://github.com/nsbno/cloud-tools
 
 #### Install Go
 ```
+OSX, others see: https://golang.org/doc/install#install
 brew install go
 ```
 
@@ -147,8 +153,8 @@ cd $GOPATH/src/github.com/nsbno/cloud-tools
 ### Install additional tools
 
 ```
-brew install s3cmd
-sudo easy_install pip
+brew install s3cmd # OSX, others see: https://tecadmin.net/install-s3cmd-manage-amazon-s3-buckets/
+sudo easy_install pip # You may have to install Python, easy_install and pip
 pip install awscli awsebcli
 ```
 
@@ -192,7 +198,8 @@ variable "region" { default = "eu-west-2" }
 
 4. Initialize the backend
 ```
-envchain aws terraform init
+envchain aws terraform init # OSX
+../../env.sh terraform init # Linux
 ```
 
 (You may have to wait a while for the S3 bucket to become available)
@@ -207,7 +214,8 @@ vars:
 
 6. Plan
 ```
-envchain aws terraform-wrapper plan
+envchain aws terraform-wrapper plan # OSX
+../../env.sh terraform-wrapper plan # Linux
 ```
 
 ## Solution:
