@@ -151,7 +151,9 @@ pip install awscli awsebcli
 # Task 1
 In this task we will initialize the Terraform environment and run our first plan
 
-`git checkout start`
+```bash
+git checkout start
+```
 
 1. Go to `infrastructure/test`
 2. Create a s3 bucket for you remote state
