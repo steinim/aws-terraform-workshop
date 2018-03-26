@@ -31,7 +31,7 @@ Go to: https://console.aws.amazon.com/iam/home?region=eu-west-2#/users
 cat ~/.ssh/id_rsa.pub | pbcopy
 ``` 
 
-### Create you AWS API credentials
+### Create your AWS API credentials
 
 Go to: https://console.aws.amazon.com/iam/home?region=eu-west-2#/users
 
@@ -70,7 +70,6 @@ https://www.passwordstore.org/
 echo 'export PASSWORD_STORE_DIR=~/.password-store' >> ~/.bashrc
 . ~/.bashrc
 brew install pass
-pass init
 ```
 
 #### Configure `pass`
@@ -208,5 +207,13 @@ vars:
 envchain aws terraform-wrapper plan
 ```
 
+## Solution:
+
+```
+git checkout task1
+```
+
 # Task 2
 In this task we will create a VPC
+
+
