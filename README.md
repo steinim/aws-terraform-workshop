@@ -149,17 +149,19 @@ pip install awscli awsebcli
 ```
 
 # Task 1
-In this task we will initialize the Terraform environment.
+In this task we will initialize the Terraform environment and run our first plan
 
 `git checkout start`
 
 1. Go to `infrastructure/test`
+2. Create a s3 bucket for you remote state
+   ```envchain aws s3cmd --region eu-west-2 mb s3://<unique-bucket-name>``` 
 2. Create the following files
    ```bash
    # backend.tf
    terraform {
      backend "s3" {
-       bucket = "terraform-state"
+       bucket = "<unique-bucket-name>"
        key    = "infrastructure/test/terraform.tfstate"
        region = "eu-west-2"
      }
@@ -178,4 +180,15 @@ In this task we will initialize the Terraform environment.
 3. Initialize the backend
    ```hcl
    envchain aws terraform init
-   ```
+   ``` (You may have to wait a while for the S3 bucket to become available)
+4. Create the following file
+   ```
+   # cloud-config.yml
+     - name: TF_VAR_env
+       value: test
+   ```
+5. Plan
+   ```envchain aws terraform-wrapper plan```
+
+# Task 2
+In this task we will create a VPC
