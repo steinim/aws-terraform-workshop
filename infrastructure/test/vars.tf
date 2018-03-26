@@ -1,1 +1,2 @@
-variable "region" { default = "eu-west-2" }
+variable "region" {}
+variable "env" {}

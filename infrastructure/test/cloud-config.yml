@@ -1,3 +1,6 @@
 vars:
   - name: TF_VAR_env
     value: test
+  - name: TF_VAR_region
+    value: eu-west-2
+
