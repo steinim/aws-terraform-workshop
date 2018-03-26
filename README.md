@@ -155,9 +155,11 @@ In this task we will initialize the Terraform environment and run our first plan
 
 1. Go to `infrastructure/test`
 2. Create a s3 bucket for you remote state
-   ```envchain aws s3cmd --region eu-west-2 mb s3://<unique-bucket-name>``` 
+   ```bash
+   envchain aws s3cmd --region eu-west-2 mb s3://<unique-bucket-name>
+   ``` 
 2. Create the following files
-   ```bash
+   ```hcl
    # backend.tf
    terraform {
      backend "s3" {
@@ -166,29 +168,30 @@ In this task we will initialize the Terraform environment and run our first plan
        region = "eu-west-2"
      }
    }
-   ```
-   ```bash
+
    # main.tf
    provider "aws" {
      region = "${var.region}"
    }
-   ```
-   ```bash
+ 
    # vars.tf
    variable "region" { default = "eu-west-2" }
    ```
 3. Initialize the backend
-   ```hcl
+   ```bash
    envchain aws terraform init
-   ``` (You may have to wait a while for the S3 bucket to become available)
+   ```
+   (You may have to wait a while for the S3 bucket to become available)
 4. Create the following file
-   ```
+   ```yml
    # cloud-config.yml
      - name: TF_VAR_env
        value: test
    ```
 5. Plan
-   ```envchain aws terraform-wrapper plan```
+   ```bash
+   envchain aws terraform-wrapper plan
+   ```
 
 # Task 2
 In this task we will create a VPC
