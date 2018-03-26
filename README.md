@@ -158,10 +158,12 @@ git checkout start
 ```
 
 1. Go to `infrastructure/test`
+
 2. Create a s3 bucket for you remote state
 ```
 envchain aws s3cmd --region eu-west-2 mb s3://<unique-bucket-name>
 ```
+
 3. Create the following files
 ```
 # backend.tf
@@ -172,20 +174,27 @@ terraform {
     region = "eu-west-2"
   }
 }
+```
 
+```
 # main.tf
 provider "aws" {
   region = "${var.region}"
 }
- 
+```
+
+```
 # vars.tf
 variable "region" { default = "eu-west-2" }
 ```
+
 4. Initialize the backend
 ```
 envchain aws terraform init
 ```
+
 (You may have to wait a while for the S3 bucket to become available)
+
 5. Create the following file
 ```
 # cloud-config.yml
@@ -193,8 +202,9 @@ vars:
   - name: TF_VAR_env
     value: test
 ```
+
 6. Plan
-```bash
+```
 envchain aws terraform-wrapper plan
 ```
 
