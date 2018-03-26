@@ -1,6 +1,6 @@
 # aws-terraform-workshop
 
-Provisioning AWS Infrastructure for Security and Continuous Delivery with Terraform and Elastic Beanstalk
+**Provisioning AWS Infrastructure for Security and Continuous Delivery with Terraform and Elastic Beanstalk**
 
 In this workshop you will learn how to provision infrastructure in AWS using tools for automating everything. We will cover how to use Terraform for provisioning basic infrastructure on AWS, including VPCs, networking, security groups (firewall’ish) and deployment of applications on Elastic Beanstalk in an autoscaled and load balanced environment. We will also set up a hosted database and a bastion host (jump host) for connecting to servers inside your private subnet. As a bonus you will learn how to handle secrets when working in an environment built for continuous delivery.
 
@@ -12,7 +12,7 @@ Slides: https://steinim.github.io/slides/aws-terraform-workshop/
 
 Go to: https://aws.amazon.com/free and sign up for a free account.
 
-Tip: If you already have an account and use gmail and want to make a new account for this workshop you can add +<something> before the @ in your email-address. Example: `john.doe+workshop@gmail.com`
+**Tip**: If you already have an account and use gmail and want to make a new account for this workshop you can add +<something> before the @ in your email-address. Example: `john.doe+workshop@gmail.com`
 
 ### Secure your AWS Account
 
@@ -26,15 +26,16 @@ Tip: If you already have an account and use gmail and want to make a new account
 Go to: https://console.aws.amazon.com/iam/home?region=eu-west-2#/users
 
 1. Click on your newly created user
-2. Go to Security Credentials and upload your SSH public key under **SSH keys for AWS CodeCommit** ```cat ~/.ssh/id_rsa.pub | pbcopy``` 
+2. Go to `Security Credentials` and upload your SSH public key under `SSH keys for AWS CodeCommit`
+```cat ~/.ssh/id_rsa.pub | pbcopy``` 
 
 ### Create you AWS API credentials
 
 Go to: https://console.aws.amazon.com/iam/home?region=eu-west-2#/users
 
 1. Click on your newly created user
-2. Go to Security Credentials and press **Create access key**
-3. Copy your credentials to a file or download the .csv file (NB! You will see your secret key only once)
+2. Go to `Security Credentials` and press `Create access key`
+3. Copy your credentials to a file or download the .csv file (**NB!** You will only see your secret key once)
 
 ### Install homebrew (OS X users only)
 ```
@@ -49,7 +50,7 @@ brew install envchain
 envchain --set aws AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_DEFAULT_REGION
 ```
 
-> Note: AWS_DEFAULT_REGION = eu-central-1
+> Note: AWS_DEFAULT_REGION = eu-west-2
 
 https://github.com/sorah/envchain
 
@@ -114,5 +115,9 @@ pip install awscli awsebcli ansible
 # Task 1
 In this task we will initialize the Terraform environment.
 
+`git checkout start`
+
 1. Go to `infrastructure/test1`
-2. 
+2. Create a new file `cloud-config.yml` with the following content
+```
+```
