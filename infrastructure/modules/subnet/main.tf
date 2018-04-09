@@ -5,6 +5,9 @@ resource "aws_subnet" "subnet" {
   availability_zone       = "${lookup(var.zones, "zone_${count.index}")}"
   map_public_ip_on_launch = "${var.map_public_ip_on_launch}"
 
-  tags { Name = "${var.name}_subnet_${lookup(var.zones, "zone_${count.index}")}" }
+  tags {
+    Name = "${var.name}_subnet_${lookup(var.zones, "zone_${count.index}")}",
+    Tier = "${var.name}"
+  }
 }
 
