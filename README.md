@@ -720,7 +720,7 @@ output "public_ip" {
 
 <p>
 <details>
-<summary><strong>Bastion host</strong> `infrastructure/test/`</summary>
+<summary><strong>Main project</strong> `infrastructure/test/`</summary>
   
 ```
 # main.tf
