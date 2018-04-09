@@ -597,7 +597,6 @@ envchain aws terraform-wrapper apply
 
 ## Solution:
 
-
 ```
 git checkout task3
 ```
@@ -808,11 +807,80 @@ git checkout task4
 
 In this task we will set up a hosted database.
 
-❗️We are now moving to the `app-infrastructure` folder structure.
-
 ### Generate a database password
 
-`pass generate hello/test/db_password`
+`pass generate --no-symbols hello/test/db_password`
+
+## Modules
+
+<p>
+<details>
+<summary><strong>Database subnet group</strong> `infrastructure/modules/db-subnet-group/`</summary>
+  
+```
+# main.tf
+resource "aws_db_subnet_group" "db_subnet_group" {
+  name        = "${var.db_subnet_group_name}"
+  description = "${var.db_subnet_group_name}"
+  subnet_ids  = ["${var.private_subnet_ids}"]
+}
+
+---
+
+# vars.tf
+variable "db_subnet_group_name" {}
+variable "private_subnet_ids" { type = "list" }
+
+---
+
+# outputs.tf
+output "db_subnet_group_id" {
+  value = "${aws_db_subnet_group.db_subnet_group.id}"
+}
+
+```
+
+</details>
+</p>
+
+<p>
+<details>
+<summary><strong>Main project</strong> `infrastructure/test/`</summary>
+  
+```
+# main.tf
+...
+module "db_subnet_group" {
+  source               = "../modules/db-subnet-group"
+  db_subnet_group_name = "${var.env}_db_subnet_group"
+  private_subnet_ids   = ["${module.private_subnets.subnet_ids}"]
+}
+
+```
+
+</details>
+</p>
+
+#### Update modules
+
+```
+envchain aws terraform get --update # OSX
+../../env.sh terraform get --update # Linux
+
+```
+#### Plan and apply
+
+```
+# OSX
+envchain aws terraform-wrapper plan
+envchain aws terraform-wrapper apply
+# Linux
+../../env.sh terraform-wrapper plan
+../../env.sh terraform-wrapper apply
+
+```
+
+‼️ We are now moving to the `app-infrastructure` folder structure.
 
 ### Create a backend for storing state
 
@@ -846,7 +914,6 @@ vars:
 
 `envchain aws terraform init`
 
-## Modules
 
 <p>
 <details>
@@ -854,18 +921,152 @@ vars:
   
 ```
 # main.tf
+data "aws_vpc" "vpc" {
+  tags { Name = "${var.env}_vpc" }
+}
+resource "aws_db_instance" "db" {
+  name                      = "${var.db_name}"
+  identifier                = "${var.db_identifier}"
+  engine                    = "${var.db_engine}"
+  engine_version            = "${var.db_engine_version}"
+  instance_class            = "${var.db_instance_class}"
+  username                  = "${var.db_username}"
+  password                  = "${var.db_password}"
+  vpc_security_group_ids    = ["${aws_security_group.db_sg.id}"]
+  db_subnet_group_name      = "${var.db_subnet_group_id}"
+  backup_retention_period   = "${var.backup_retention_period}"
+  availability_zone         = "${var.availability_zone}"
+  multi_az                  = "${var.multi_az}"
+  backup_window             = "${var.backup_window}"
+  maintenance_window        = "${var.maintenance_window}"
+  allocated_storage         = "${var.allocated_storage}"
+  storage_type              = "${var.storage_type}"
+  apply_immediately         = "${var.apply_immediately}"
+  skip_final_snapshot       = "${var.skip_final_snapshot}"
+  license_model             = "${var.license_model}"
+  tags {
+    Name = "${var.db_name_tag}"
+  }
+}
+
+resource "aws_security_group" "db_sg" {
+    vpc_id      = "${data.aws_vpc.vpc.id}"
+    name        = "${var.db_sg_name}"
+    description = "${var.db_sg_name}"
+    tags { Name = "${var.db_sg_name}" }
+}
 
 ---
 
 # vars.tf
-
+variable "env" {}
+variable "db_name" {}
+variable "db_name_tag" { default = "" }
+variable "db_subnet_group_id" {}
+variable "db_identifier" {}
+variable "db_engine" {}
+variable "db_engine_version" {}
+variable "db_instance_class" {}
+variable "db_username" {}
+variable "db_password" {}
+variable "db_sg_name" {}
+variable "backup_retention_period" { default = "0" }
+variable "availability_zone" { default = "eu-west-2a" }
+variable "multi_az" { default = "false" }
+variable "backup_window" {}
+variable "maintenance_window" { default =  "Wed:03:55-Wed:04:25" }
+variable "allocated_storage" {}
+variable "storage_type" {}
+variable "apply_immediately" {}
+variable "skip_final_snapshot" { default = "true" }
+variable "license_model" { default = "" }
 
 ---
 
 # outputs.tf
 
+output "db_security_group_id" {
+    value = "${aws_security_group.db_sg.id}"
+}
+
+output "address" {
+    value = "${aws_db_instance.db.address}"
+}
 
 ```
 
 </details>
 </p>
+
+<p>
+<details>
+<summary><strong>Main project</strong> `app-infrastructure/test/`</summary>
+  
+```
+# main.tf
+module "db" {
+  source                  = "../modules/rds"
+  env                     = "${var.env}"
+  db_name                 = "${var.env}_${var.appname}"
+  db_identifier           = "${var.env}-${var.appname}-rds"
+  db_sg_name              = "${var.env}_${var.appname}_db_sg"
+  db_engine               = "mysql"
+  db_engine_version       = "5.7.21"
+  db_instance_class       = "${var.db_instance_class}"
+  db_username             = "root"
+  db_password             = "${var.db_password}"
+  db_subnet_group_id      = "${var.env}_db_subnet_group"
+  backup_retention_period = "${var.backup_retention_period}"
+  multi_az                = "${var.multi_az}"
+  backup_window           = "${var.backup_window}"
+  maintenance_window      = "${var.maintenance_window}"
+  allocated_storage       = "${var.allocated_storage}"
+  storage_type            = "${var.storage_type}"
+  apply_immediately       = "${var.apply_immediately}"
+}
+
+---
+
+# vars.tf
+variable "env" {}
+variable "appname" { default = "hello" }
+variable "db_password" {}
+variable "backup_retention_period" { default = "0" }
+variable "multi_az" { default = "false" }
+variable "backup_window" { default = "02:17-02:47" }
+variable "maintenance_window" { default = "Wed:03:55-Wed:04:25" }
+variable "allocated_storage" { default = 10 }
+variable "db_instance_class" { default = "db.t2.micro" }
+variable "storage_type" { default = "gp2" }
+variable "apply_immediately" { default = "true" }
+
+```
+
+</details>
+</p>
+
+## Update modules
+
+```
+envchain aws terraform get --update # OSX
+../../env.sh terraform get --update # Linux
+
+```
+## Plan and apply
+
+```
+# OSX
+envchain aws terraform-wrapper plan
+envchain aws terraform-wrapper apply
+# Linux
+../../env.sh terraform-wrapper plan
+../../env.sh terraform-wrapper apply
+
+```
+
+
+## Solution:
+
+```
+git checkout task5
+```
