@@ -455,6 +455,8 @@ output "public_ip" {
 </details>
 </p>
 
+First add an elastic ip to your account. Go to https://eu-west-2.console.aws.amazon.com/vpc/home and click 'Allocate new address'
+
 <p>
 <details>
 <summary><strong>NAT route table</strong> `infrastructure/modules/nat-route-table/`</summary>
