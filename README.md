@@ -319,6 +319,7 @@ In this task we will set up software defined networking (SDN) with subnets, rout
 <p>
 <details>
 <summary><strong>Subnets</strong> `infrastructure/modules/subnet/`</summary>
+  
   ```
 # main.tf
 resource "aws_subnet" "subnet" {
@@ -360,6 +361,7 @@ output "subnet_ids" {
 <p>
 <details>
 <summary><strong>Route table for VPC default internet gateway</strong> `infrastructure/modules/ig-route-table/`</summary>
+  
   ```
 # main.tf
 resource "aws_route_table" "internet_gateway_route_table" {
@@ -392,6 +394,7 @@ output "internet_gateway_route_table_id" {
 <p>
 <details>
 <summary><strong>Route table association</strong> `infrastructure/modules/route-table-association/`</summary>
+  
   ```
 # main.tf
 resource "aws_route_table_association" "route-table-association" {
@@ -414,6 +417,7 @@ variable "route_table_id" {}
 <p>
 <details>
 <summary><strong>NAT gateway</strong> `infrastructure/modules/nat/`</summary>
+  
   ```
 # main.tf
 resource "aws_nat_gateway" "nat" {
@@ -450,6 +454,7 @@ output "public_ip" {
 <p>
 <details>
 <summary><strong>NAT route table</strong> `infrastructure/modules/nat-route-table/`</summary>
+  
   ```
 # main.tf
 resource "aws_route_table" "nat_route_table" {
@@ -486,6 +491,7 @@ output "nat_route_table_id" {
 <p>
 <details>
 <summary><strong>Main project</strong> `infrastructure/test/`</summary>
+  
   ```
 # main.tf
 
@@ -563,6 +569,7 @@ variable "nat_eip_allocation_id" { default = "eipalloc-XXXXXXXXXXXXX" } # Substi
 </p>
 
 ## Update modules
+
 ```
 envchain aws terraform get --update # OSX
 ../../env.sh terraform get --update # Linux
@@ -581,6 +588,7 @@ envchain aws terraform-wrapper apply
 ```
 
 ## Solution:
+
 
 ```
 git checkout task3
