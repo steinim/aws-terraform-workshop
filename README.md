@@ -815,7 +815,7 @@ In this task we will set up a hosted database.
 
 <p>
 <details>
-<summary><strong>Database</strong> `app-infrastructure/modules/database/`</summary>
+<summary><strong>Database</strong> `app-infrastructure/modules/rds/`</summary>
   
 ```
 # main.tf
