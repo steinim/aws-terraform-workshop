@@ -597,7 +597,6 @@ envchain aws terraform-wrapper apply
 
 ## Solution:
 
-
 ```
 git checkout task3
 ```
@@ -1063,4 +1062,11 @@ envchain aws terraform-wrapper apply
 ../../env.sh terraform-wrapper plan
 ../../env.sh terraform-wrapper apply
 
+```
+
+
+## Solution:
+
+```
+git checkout task5
 ```
