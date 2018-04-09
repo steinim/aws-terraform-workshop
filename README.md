@@ -800,7 +800,37 @@ envchain aws terraform-wrapper apply
 
 ## Solution:
 
-
 ```
 git checkout task4
 ```
+
+# Task 4 - Database
+
+In this task we will set up a hosted database.
+
+❗️We are now moving to the `app-infrastructure` folder structure.
+
+
+## Modules
+
+<p>
+<details>
+<summary><strong>Database</strong> `app-infrastructure/modules/database/`</summary>
+  
+```
+# main.tf
+
+---
+
+# vars.tf
+
+
+---
+
+# outputs.tf
+
+
+```
+
+</details>
+</p>
