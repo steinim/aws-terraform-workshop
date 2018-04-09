@@ -810,6 +810,43 @@ In this task we will set up a hosted database.
 
 ❗️We are now moving to the `app-infrastructure` folder structure.
 
+## Secrets
+
+### Generate a database password
+
+`pass generate hello/test/db_password`
+
+### Create a backend for storing state
+
+```
+# backend.tf
+terraform {
+  backend "s3" {
+    bucket = "<unique-bucket-name>"
+    key    = "infrastructure/test/hello/terraform.tfstate"
+    region = "eu-west-2"
+  }
+}
+```
+
+### Create a new `cloud-config.yml`:
+
+```
+secret-vars:
+  - name: TF_VAR_db_password
+    key: hello/test/db_password
+
+vars:
+  - name: TF_VAR_env
+    value: test
+  - name: AWS_DEFAULT_REGION
+    value: eu-west-2
+```
+
+
+### Initialize the backend
+
+`envchain aws terraform init`
 
 ## Modules
 
