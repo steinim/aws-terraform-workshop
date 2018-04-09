@@ -810,8 +810,6 @@ In this task we will set up a hosted database.
 
 ❗️We are now moving to the `app-infrastructure` folder structure.
 
-## Secrets
-
 ### Generate a database password
 
 `pass generate hello/test/db_password`
