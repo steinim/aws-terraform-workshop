@@ -58,3 +58,27 @@ module "private_route_table_association" {
   route_table_id = "${module.private_nat_route_table.nat_route_table_id}"
 }
 
+module "security_groups" {
+  source     = "../modules/security-groups"
+  vpc_id     = "${module.vpc.vpc_id}"
+  env        = "${var.env}"
+  cidr_block = "0.0.0.0/0"
+}
+
+module "key_pair" {
+  source     = "../modules/key-pair"
+  key_name   = "${var.env}"
+  public_key = "${var.public_key}"
+}
+
+module "bastion" {
+  source                      = "../modules/instance"
+  name                        = "${var.env}_bastion"
+  ami                         = "${var.bastion_ami}"
+  instance_type               = "t2.nano"
+  key_pair_id                 = "${module.key_pair.id}"
+  subnet_id                   = "${element(module.public_subnets.subnet_ids, 0)}"
+  associate_public_ip_address = "${var.bastion_associate_public_ip_address}"
+  security_group_id           = "${module.security_groups.bastion_sg_id}"
+  source_dest_check           = "false"
+}

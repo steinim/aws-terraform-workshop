@@ -13,3 +13,6 @@ variable "private_subnets_cidr_blocks" {
   }
 }
 variable "nat_eip_allocation_id" { default = "eipalloc-0e7b88a896d2db1e2" } # Substitute with your own eip-id
+variable "bastion_associate_public_ip_address" { default = true }
+variable "bastion_ami" { default = "ami-dff017b8" }
+variable "public_key" {}
