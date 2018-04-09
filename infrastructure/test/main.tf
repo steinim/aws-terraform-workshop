@@ -82,3 +82,9 @@ module "bastion" {
   security_group_id           = "${module.security_groups.bastion_sg_id}"
   source_dest_check           = "false"
 }
+
+module "db_subnet_group" {
+  source               = "../modules/db-subnet-group"
+  db_subnet_group_name = "${var.env}_db_subnet_group"
+  private_subnet_ids   = ["${module.private_subnets.subnet_ids}"]
+}

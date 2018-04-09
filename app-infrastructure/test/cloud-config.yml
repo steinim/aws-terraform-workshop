@@ -1,0 +1,9 @@
+secret-vars:
+  - name: TF_VAR_db_password
+    key: hello/test/db_password
+
+vars:
+  - name: TF_VAR_env
+    value: test
+  - name: AWS_DEFAULT_REGION
+    value: eu-west-2
