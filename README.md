@@ -320,7 +320,7 @@ In this task we will set up software defined networking (SDN) with subnets, rout
 <details>
 <summary><strong>Subnets</strong> `infrastructure/modules/subnet/`</summary>
   
-  ```
+```
 # main.tf
 resource "aws_subnet" "subnet" {
   vpc_id                  = "${var.vpc_id}"
@@ -354,7 +354,8 @@ variable "zones" {
 output "subnet_ids" {
   value = ["${aws_subnet.subnet.*.id}"]
 }
-  ```
+```
+
 </details>
 </p>
 
@@ -362,7 +363,7 @@ output "subnet_ids" {
 <details>
 <summary><strong>Route table for VPC default internet gateway</strong> `infrastructure/modules/ig-route-table/`</summary>
   
-  ```
+```
 # main.tf
 resource "aws_route_table" "internet_gateway_route_table" {
     vpc_id      = "${var.vpc_id}"
@@ -387,7 +388,8 @@ variable "cidr_block" { default = "0.0.0.0/0" }
 output "internet_gateway_route_table_id" {
   value = "${aws_route_table.internet_gateway_route_table.id}"
 }
-  ```
+```
+
 </details>
 </p>
 
@@ -395,7 +397,7 @@ output "internet_gateway_route_table_id" {
 <details>
 <summary><strong>Route table association</strong> `infrastructure/modules/route-table-association/`</summary>
   
-  ```
+```
 # main.tf
 resource "aws_route_table_association" "route-table-association" {
     count          = "${var.number_of_subnets}"
@@ -410,15 +412,16 @@ variable "number_of_subnets" { default = 2 }
 variable "subnet_ids" { type = "list" }
 variable "route_table_id" {}
 
-  ```
+```
+
 </details>
 </p>
 
 <p>
 <details>
 <summary><strong>NAT gateway</strong> `infrastructure/modules/nat/`</summary>
-  
-  ```
+
+```
 # main.tf
 resource "aws_nat_gateway" "nat" {
   count         = "1"
@@ -447,7 +450,8 @@ output "public_ip" {
   value = "${aws_nat_gateway.nat.public_ip}"
 }
 
-  ```
+```
+
 </details>
 </p>
 
@@ -455,7 +459,7 @@ output "public_ip" {
 <details>
 <summary><strong>NAT route table</strong> `infrastructure/modules/nat-route-table/`</summary>
   
-  ```
+```
 # main.tf
 resource "aws_route_table" "nat_route_table" {
     vpc_id      = "${var.vpc_id}"
@@ -482,7 +486,8 @@ output "nat_route_table_id" {
   value = "${aws_route_table.nat_route_table.id}"
 }
 
-  ```
+```
+
 </details>
 </p>
 
@@ -492,7 +497,7 @@ output "nat_route_table_id" {
 <details>
 <summary><strong>Main project</strong> `infrastructure/test/`</summary>
   
-  ```
+```
 # main.tf
 
 ...
@@ -564,7 +569,8 @@ variable "private_subnets_cidr_blocks" {
 }
 variable "nat_eip_allocation_id" { default = "eipalloc-XXXXXXXXXXXXX" } # Substitute with your own eip-id
 
-  ```
+```
+
 </details>
 </p>
 
