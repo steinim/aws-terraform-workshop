@@ -601,3 +601,204 @@ envchain aws terraform-wrapper apply
 ```
 git checkout task3
 ```
+
+# Task 3 - Bastion host
+
+In this task we will set up a bastion host and a security group allowing ssh access
+
+## Modules
+
+<p>
+<details>
+<summary><strong>Security group</strong> `infrastructure/modules/security-groups/`</summary>
+  
+```
+# main.tf
+resource "aws_security_group" "bastion_sg" {
+  vpc_id      = "${var.vpc_id}"
+  name        = "${var.env}_bastion_sg"
+  tags { Name = "${var.env}_bastion_sg" }
+}
+
+resource "aws_security_group_rule" "ssh_ingress_rule" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = ["${var.cidr_block}"]
+  security_group_id = "${aws_security_group.bastion_sg.id}"
+}
+
+---
+
+# vars.tf
+
+variable "vpc_id" {}
+variable "env" {}
+variable "cidr_block" {}
+
+---
+
+# outputs.tf
+output "bastion_sg_id" {
+    value = "${aws_security_group.bastion_sg.id}"
+}
+```
+
+</details>
+</p>
+
+<p>
+<details>
+<summary><strong>SSH key pair</strong> `infrastructure/modules/key-pair/`</summary>
+  
+```
+# main.tf
+resource "aws_key_pair" "auth" {
+  key_name   = "${var.key_name}"
+  public_key = "${var.public_key}"
+}
+
+---
+
+# vars.tf
+
+variable "key_name" {}
+variable "public_key" {}
+
+---
+
+# outputs.tf
+output "id" {
+  value = "${aws_key_pair.auth.id}"
+}
+```
+
+<p>
+<details>
+<summary><strong>Bastion host</strong> `infrastructure/modules/instance/`</summary>
+  
+```
+# main.tf
+resource "aws_instance" "instance" {
+  ami                         = "${var.ami}"
+  instance_type               = "${var.instance_type}"
+  key_name                    = "${var.key_pair_id}"
+  subnet_id                   = "${var.subnet_id}"
+  associate_public_ip_address = "${var.associate_public_ip_address}"
+  source_dest_check           = "${var.source_dest_check}"
+  vpc_security_group_ids      = [ "${var.security_group_id}" ]
+}
+
+---
+
+# vars.tf
+variable "name" {}
+variable "ami" {}
+variable "instance_type" { default = "t2.micro" }
+variable "key_pair_id" {}
+variable "subnet_id" {}
+variable "associate_public_ip_address" { default = false }
+variable "source_dest_check" { default = true }
+variable "security_group_id" {}
+
+---
+
+# outputs.tf
+output "public_ip" {
+  value = "${aws_instance.instance.public_ip}"
+}
+
+```
+
+</details>
+</p>
+
+## Main project
+
+<p>
+<details>
+<summary><strong>Bastion host</strong> `infrastructure/test/`</summary>
+  
+```
+# main.tf
+...
+module "security_groups" {
+  source     = "../modules/security-groups"
+  vpc_id     = "${module.vpc.vpc_id}"
+  env        = "${var.env}"
+  cidr_block = "0.0.0.0/0"
+}
+
+module "key_pair" {
+  source     = "../modules/key-pair"
+  key_name   = "${var.env}"
+  public_key = "${var.public_key}"
+}
+
+module "bastion" {
+  source                      = "../modules/instance"
+  name                        = "${var.env}_bastion"
+  ami                         = "${var.bastion_ami}"
+  instance_type               = "t2.nano"
+  key_pair_id                 = "${module.key_pair.id}"
+  subnet_id                   = "${element(module.public_subnets.subnet_ids, 0)}"
+  associate_public_ip_address = "${var.bastion_associate_public_ip_address}"
+  security_group_id           = "${module.security_groups.bastion_sg_id}"
+  source_dest_check           = "false"
+}
+
+---
+
+# vars.tf
+variable "bastion_associate_public_ip_address" { default = true }
+variable "bastion_ami" { default = "ami-dff017b8" }
+variable "public_key" {}
+
+---
+
+# cloud-config.yml
+vars:
+  - name: TF_VAR_env
+    value: test
+  - name: TF_VAR_region
+    value: eu-west-2
+  - name: TF_VAR_public_key
+    value: "<publik key>"
+    
+```
+
+</details>
+</p>
+
+
+## Update modules
+
+```
+envchain aws terraform get --update # OSX
+../../env.sh terraform get --update # Linux
+
+```
+## Plan and apply
+
+```
+# OSX
+envchain aws terraform-wrapper plan
+envchain aws terraform-wrapper apply
+# Linux
+../../env.sh terraform-wrapper plan
+../../env.sh terraform-wrapper apply
+
+```
+
+## Log on to the bastion host
+
+`ssh ec2-user@$(envchain aws terraform output --module=bastion public_ip)`
+
+
+## Solution:
+
+
+```
+git checkout task4
+```
