@@ -312,13 +312,292 @@ git checkout task2
 ```
 
 # Task 3 - Networking
-In this task we will set up software defined networking (SDN) with route tables, NAT and subnets.
+In this task we will set up software defined networking (SDN) with subnets, route tables, internet gateway and NAT.
+
+## Modules
 
 <p>
 <details>
-<summary><strong>Routing</strong> `infrastructure/modules/route-table/`</summary>
-  ```
-  yada
-  ```
+<summary><strong>Subnets</strong> `infrastructure/modules/subnet/`</summary>
+  
+```
+# main.tf
+resource "aws_subnet" "subnet" {
+  vpc_id                  = "${var.vpc_id}"
+  count                   = "${var.number_of_subnets}"
+  cidr_block              = "${lookup(var.cidr_blocks, "zone_${count.index}")}"
+  availability_zone       = "${lookup(var.zones, "zone_${count.index}")}"
+  map_public_ip_on_launch = "${var.map_public_ip_on_launch}"
+
+  tags { Name = "${var.name}_subnet_${lookup(var.zones, "zone_${count.index}")}" }
+}
+
+---
+
+# vars.tf
+
+variable "vpc_id" {}
+variable "number_of_subnets" { default = 2 }
+variable "cidr_blocks" { type = "map" }
+variable "map_public_ip_on_launch" {}
+variable "name" {}
+variable "zones" {
+  default = {
+    zone_0 = "eu-west-2a"
+    zone_1 = "eu-west-2b"
+  }
+}
+
+---
+
+# outputs.tf
+output "subnet_ids" {
+  value = ["${aws_subnet.subnet.*.id}"]
+}
+```
+
 </details>
 </p>
+
+<p>
+<details>
+<summary><strong>Route table for VPC default internet gateway</strong> `infrastructure/modules/ig-route-table/`</summary>
+  
+```
+# main.tf
+resource "aws_route_table" "internet_gateway_route_table" {
+    vpc_id      = "${var.vpc_id}"
+    route {
+        cidr_block     = "${var.cidr_block}"
+        gateway_id = "${var.internet_gateway_id}"
+    }
+    tags { Name = "${var.env}_internet_gateway_route_table" }
+}
+
+---
+
+# vars.tf
+variable "vpc_id" {}
+variable "env" {}
+variable "internet_gateway_id" {}
+variable "cidr_block" { default = "0.0.0.0/0" }
+
+---
+
+# outputs.tf
+output "internet_gateway_route_table_id" {
+  value = "${aws_route_table.internet_gateway_route_table.id}"
+}
+```
+
+</details>
+</p>
+
+<p>
+<details>
+<summary><strong>Route table association</strong> `infrastructure/modules/route-table-association/`</summary>
+  
+```
+# main.tf
+resource "aws_route_table_association" "route-table-association" {
+    count          = "${var.number_of_subnets}"
+    subnet_id      = "${element(var.subnet_ids, count.index)}"
+    route_table_id = "${var.route_table_id}"
+}
+
+---
+
+# vars.tf
+variable "number_of_subnets" { default = 2 }
+variable "subnet_ids" { type = "list" }
+variable "route_table_id" {}
+
+```
+
+</details>
+</p>
+
+<p>
+<details>
+<summary><strong>NAT gateway</strong> `infrastructure/modules/nat/`</summary>
+
+```
+# main.tf
+resource "aws_nat_gateway" "nat" {
+  count         = "1"
+  allocation_id = "${var.nat_eip_allocation_id}"
+  subnet_id     = "${var.public_subnet_ids[0]}"
+}
+
+---
+
+# vars.tf
+variable "nat_gateway_enabled" {
+    description = "set to 1 to create nat gateway instances for private subnets"
+    default = 0
+}
+variable "public_subnet_ids" { type = "list" }
+variable "nat_eip_allocation_id" {}
+
+---
+
+# outputs.tf
+output "nat_id" {
+  value = "${aws_nat_gateway.nat.id}"
+}
+
+output "public_ip" {
+  value = "${aws_nat_gateway.nat.public_ip}"
+}
+
+```
+
+</details>
+</p>
+
+First add an elastic ip to your account. Go to https://eu-west-2.console.aws.amazon.com/vpc/home and click 'Allocate new address'
+
+<p>
+<details>
+<summary><strong>NAT route table</strong> `infrastructure/modules/nat-route-table/`</summary>
+  
+```
+# main.tf
+resource "aws_route_table" "nat_route_table" {
+    vpc_id      = "${var.vpc_id}"
+    tags { Name = "${var.env}_nat_gateway_route_table" }
+}
+
+resource "aws_route" "default_route" {
+  route_table_id            = "${aws_route_table.nat_route_table.id}"
+  destination_cidr_block    = "0.0.0.0/0"
+  nat_gateway_id            = "${var.nat_id}"
+}
+
+---
+
+# vars.tf
+variable "vpc_id" {}
+variable "nat_id" {}
+variable "env" {}
+
+---
+
+# outputs.tf
+output "nat_route_table_id" {
+  value = "${aws_route_table.nat_route_table.id}"
+}
+
+```
+
+</details>
+</p>
+
+## Main project
+
+<p>
+<details>
+<summary><strong>Main project</strong> `infrastructure/test/`</summary>
+  
+```
+# main.tf
+
+...
+
+module "public_subnets" {
+  source                  = "../modules/subnet"
+  vpc_id                  = "${module.vpc.vpc_id}"
+  cidr_blocks             = "${var.public_subnets_cidr_blocks}"
+  name                    = "${var.env}_public"
+  map_public_ip_on_launch = "true"
+}
+
+module "public_ig_route_table" {
+  source              = "../modules/ig-route-table"
+  internet_gateway_id = "${module.vpc.internet_gateway_id}"
+  vpc_id              = "${module.vpc.vpc_id}"
+  env                 = "${var.env}"
+}
+
+module "public_route_table_association" {
+  source         = "../modules/route-table-association"
+  subnet_ids     = ["${module.public_subnets.subnet_ids}"]
+  route_table_id = "${module.public_ig_route_table.internet_gateway_route_table_id}"
+}
+
+module "private_subnets" {
+  source                  = "../modules/subnet"
+  vpc_id                  = "${module.vpc.vpc_id}"
+  cidr_blocks             = "${var.private_subnets_cidr_blocks}"
+  name                    = "${var.env}_private"
+  map_public_ip_on_launch = "false"
+}
+
+module "nat" {
+  source                = "../modules/nat"
+  nat_eip_allocation_id = "${var.nat_eip_allocation_id}"
+  public_subnet_ids     = ["${module.public_subnets.subnet_ids}"]
+}
+
+module "private_nat_route_table" {
+  source = "../modules/nat-route-table"
+  nat_id = "${module.nat.nat_id}"
+  vpc_id = "${module.vpc.vpc_id}"
+  env    = "${var.env}"
+}
+
+module "private_route_table_association" {
+  source         = "../modules/route-table-association"
+  subnet_ids     = ["${module.private_subnets.subnet_ids}"]
+  route_table_id = "${module.private_nat_route_table.nat_route_table_id}"
+
+---
+
+# vars.tf
+
+...
+
+variable "public_subnets_cidr_blocks" {
+  default = {
+    zone_0 = "10.0.1.0/24"
+    zone_1 = "10.0.2.0/24"
+  }
+}
+variable "private_subnets_cidr_blocks" {
+  default = {
+    zone_0 = "10.0.3.0/24"
+    zone_1 = "10.0.4.0/24"
+  }
+}
+variable "nat_eip_allocation_id" { default = "eipalloc-XXXXXXXXXXXXX" } # Substitute with your own eip-id
+
+```
+
+</details>
+</p>
+
+## Update modules
+
+```
+envchain aws terraform get --update # OSX
+../../env.sh terraform get --update # Linux
+
+```
+## Plan and apply
+
+```
+# OSX
+envchain aws terraform-wrapper plan
+envchain aws terraform-wrapper apply
+# Linux
+../../env.sh terraform-wrapper plan
+../../env.sh terraform-wrapper apply
+
+```
+
+## Solution:
+
+
+```
+git checkout task3
+```
