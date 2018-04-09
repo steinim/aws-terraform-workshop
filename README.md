@@ -812,7 +812,7 @@ In this task we will set up a hosted database.
 
 ### Generate a database password
 
-`pass generate hello/test/db_password`
+`pass generate --no-symbols hello/test/db_password`
 
 ### Create a backend for storing state
 
