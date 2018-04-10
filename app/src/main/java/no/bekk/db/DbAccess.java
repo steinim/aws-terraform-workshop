@@ -20,11 +20,10 @@ public class DbAccess {
 	public DbAccess() {
     user = System.getProperty("db.user");
 		password = System.getProperty("db.password");
-		dbIp = System.getProperty("db.ip");
-		dbName = System.getProperty("db.name");
-		dbUrl = String.format("jdbc:mysql://%s:3306/%s", dbIp, dbName);
+		dbURL = System.getProperty("db.url");
+		dbConnection = String.format("jdbc:mysql://%s:3306", dbURL);
 		try {
-			connect = DriverManager.getConnection(dbUrl, user, password);
+			connect = DriverManager.getConnection(dbConnection, "root", password);
 			System.out.println("Database connected!");
 		} catch (SQLException e) {
 			e.printStackTrace();
