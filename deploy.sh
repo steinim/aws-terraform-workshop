@@ -13,4 +13,4 @@ trap 'rm -f application.jar config.properties' EXIT
 # package the app
 ./package.sh ${env}
 
-envchain aws eb deploy ${env}-helloworld
+envchain aws2 eb deploy ${env}-helloworld

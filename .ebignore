@@ -2,3 +2,4 @@
 .*
 !/application.jar
 !/config.properties
+!/.ebextensions
