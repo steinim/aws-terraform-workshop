@@ -1188,6 +1188,13 @@ envchain aws terraform-wrapper apply
 
 ```
 
+
+## Solution:
+
+```
+git checkout task6
+```
+
 # Task 6 - Elastic Beanstalk Application
 
 In this task we will configure an Elastic Beanstalk project and deploy an application.
