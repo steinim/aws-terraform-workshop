@@ -18,7 +18,6 @@ public class DbAccess {
 
 
 	public DbAccess() {
-    user = System.getProperty("db.user");
 		password = System.getProperty("db.password");
 		dbURL = System.getProperty("db.url");
 		dbConnection = String.format("jdbc:mysql://%s:3306", dbURL);
