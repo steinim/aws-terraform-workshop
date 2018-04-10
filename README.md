@@ -1213,12 +1213,19 @@ In this task we will configure an Elastic Beanstalk project and deploy an applic
 * `SSH: Y`
 * `Keypair 1) test`
 
-## Allow Elastic Beanstalk to stream logs to CloudWatch
-1. Browse to https://console.aws.amazon.com/iam/
-
 ## Create and deploy the application
 
 1. Build the Java app: `cd app && mvn clean install && cd -`
 2. ./create.sh test
 3. Browse to https://eu-west-2.console.aws.amazon.com/elasticbeanstalk/ to watch progress.
 4. Browse to http://test-helloworld.eu-west-2.elasticbeanstalk.com/
+
+# ‼️Terminate everything ‼️
+
+```
+envchain aws eb terminate test-helloworld
+cd app-infrastructure/test
+envchain aws terraform-wrapper destroy -force
+cd ../../infrastructure/test
+envchain aws terraform-wrapper destroy -force
+```
