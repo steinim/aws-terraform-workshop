@@ -47,7 +47,7 @@ public class WebServerMain {
     Properties props = new Properties();
     InputStream input = null;
     try {
-      input = new FileInputStream("/config.properties");
+      input = new FileInputStream("./config.properties");
       props.load(input);
       for (Entry<Object, Object> e : props.entrySet()) {
         System.setProperty(e.getKey().toString(), e.getValue().toString());
