@@ -10,8 +10,10 @@
 # Vi swap files
 **/.*.swp
 
-# application target
+# application
 app/target
+application.jar
+config.properties
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
