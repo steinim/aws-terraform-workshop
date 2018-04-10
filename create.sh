@@ -6,11 +6,11 @@ if [ "$#" -ne 1 ]; then
 fi
 
 env=${1}
-vpc_id=$(envchain aws2 aws ec2 describe-vpcs --filters "Name=tag:Name,Values=${env}_vpc" --query 'Vpcs[*].[VpcId]' --output text)
+vpc_id=$(envchain aws aws ec2 describe-vpcs --filters "Name=tag:Name,Values=${env}_vpc" --query 'Vpcs[*].[VpcId]' --output text)
 
-private_subnet_ids=$(envchain aws2 aws ec2 describe-subnets --filters "Name=vpc-id,Values=${vpc_id},Name=tag:Name,Values=${env}_private_subnet*" --query 'Subnets[*].[SubnetId]' --output text | tr '\n' ',' | sed 's/,$//')
-public_subnet_ids=$(envchain aws2 aws ec2 describe-subnets --filters "Name=vpc-id,Values=${vpc_id},Name=tag:Name,Values=${env}_public_subnet*" --query 'Subnets[*].[SubnetId]' --output text | tr '\n' ',' | sed 's/,$//')
-security_group_ids=$(envchain aws2 aws ec2 describe-security-groups --filters "Name=group-name,Values=${env}_hello_app_sg" --query 'SecurityGroups[*].[GroupId]' --output text | tr '\n' ',' | sed 's/,$//')
+private_subnet_ids=$(envchain aws aws ec2 describe-subnets --filters "Name=vpc-id,Values=${vpc_id},Name=tag:Name,Values=${env}_private_subnet*" --query 'Subnets[*].[SubnetId]' --output text | tr '\n' ',' | sed 's/,$//')
+public_subnet_ids=$(envchain aws aws ec2 describe-subnets --filters "Name=vpc-id,Values=${vpc_id},Name=tag:Name,Values=${env}_public_subnet*" --query 'Subnets[*].[SubnetId]' --output text | tr '\n' ',' | sed 's/,$//')
+security_group_ids=$(envchain aws aws ec2 describe-security-groups --filters "Name=group-name,Values=${env}_hello_app_sg" --query 'SecurityGroups[*].[GroupId]' --output text | tr '\n' ',' | sed 's/,$//')
 
 # remove files on script exit
 trap 'rm -f application.jar config.properties' EXIT
@@ -31,7 +31,7 @@ read
 
 ./package.sh ${env}
 
-envchain aws2 eb create ${env}-helloworld \
+envchain aws eb create ${env}-helloworld \
   --keyname ${env} \
   --vpc.id ${vpc_id} \
   --vpc.dbsubnets ${private_subnet_ids} \
