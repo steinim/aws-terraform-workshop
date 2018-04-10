@@ -1198,7 +1198,7 @@ git checkout task6
 
 In this task we will configure an Elastic Beanstalk project and deploy an application. We will do this as a walkthrough, so check out the solution: `git checkout task7`
 
-### Initialize th project
+### Initialize the project
 
 1. Go to the root of the project folder
 
