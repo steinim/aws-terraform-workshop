@@ -1203,6 +1203,7 @@ In this task we will configure an Elastic Beanstalk project and deploy an applic
 1. Go to the root of the project folder
 2. Type `envchain aws eb init`
 3. Answer the questions
+
    * `16) eu-west-2 : EU (London)`
    * `Application Name: helloworld`
    * `11) Java`
@@ -1210,11 +1211,14 @@ In this task we will configure an Elastic Beanstalk project and deploy an applic
    * `CodeCommit? (y/N) (default is n): N`
    * `SSH: Y`
    * `Keypair 1) test`
+   
 4. Add a file called `.ebignore` with the following contents:
+
    ```
    *
    .*
    !/app.zip
    ```
+   
 5. Build the Java app: `cd app && mvn clean install && cd -`
 6. 
