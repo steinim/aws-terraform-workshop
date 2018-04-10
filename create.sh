@@ -42,4 +42,4 @@ envchain aws eb create ${env}-helloworld \
   --instance_type t2.micro \
   --platform java-8 \
   --cname ${env}-helloworld \
-  --scale 2 \
+  --scale 2
