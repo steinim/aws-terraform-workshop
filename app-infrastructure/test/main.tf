@@ -19,3 +19,10 @@ module "db" {
   apply_immediately       = "${var.apply_immediately}"
 }
 
+module "security-groups" {
+  source                  = "../modules/security-groups"
+  env                     = "${var.env}"
+  app_security_group_name = "${var.env}_${var.appname}_app_sg"
+  db_security_group_id    = "${module.db.db_security_group_id}"
+  db_port                 = "3306"
+}
