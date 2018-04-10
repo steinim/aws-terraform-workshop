@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ "$#" -ne 2 ]; then
+    echo "Illegal number of parameters"
+    exit 1
+fi
+
 filename=${1}
 dbname=${2}
 echo "db.url=$(envchain aws2 aws rds describe-db-instances --query 'DBInstances[*].[Endpoint.Address]' --output text)" | grep ${dbname} > ${filename}
