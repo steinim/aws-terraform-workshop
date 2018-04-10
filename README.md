@@ -1070,3 +1070,132 @@ envchain aws terraform-wrapper apply
 ```
 git checkout task5
 ```
+
+# Task 5 - Security groups
+
+In this task we will set up security groups between the bastion host and apps, and between apps and the database.
+
+## Modules
+
+<p>
+<details>
+<summary><strong>Security groups</strong> `app-infrastructure/modules/security-groups/`</summary>
+  
+```
+# main.tf
+data "aws_vpc" "vpc" {
+  tags { Name = "${var.env}_vpc" }
+}
+
+data "aws_security_group" "bastion_security_group" {
+  name = "${var.env}_bastion_sg"
+}
+
+resource "aws_security_group" "app_security_group" {
+  vpc_id      = "${data.aws_vpc.vpc.id}"
+  name        = "${var.app_security_group_name}"
+  description = "${var.app_security_group_name}"
+  tags { Name = "${var.app_security_group_name}" }
+}
+
+# Bastion -> App
+resource "aws_security_group_rule" "from_bastion_to_app_egress_security_rule" {
+  type                     = "egress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
+  security_group_id        = "${data.aws_security_group.bastion_security_group.id}"
+  source_security_group_id = "${aws_security_group.app_security_group.id}"
+}
+
+resource "aws_security_group_rule" "from_bastion_to_app_ingress_security_rule" {
+  type                     = "ingress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
+  security_group_id        = "${aws_security_group.app_security_group.id}"
+  source_security_group_id = "${data.aws_security_group.bastion_security_group.id}"
+}
+
+# App -> DB
+resource "aws_security_group_rule" "from_app_to_db_ingress_security_rule" {
+  type                     = "ingress"
+  from_port                = "${var.db_port}"
+  to_port                  = "${var.db_port}"
+  protocol                 = "tcp"
+  security_group_id        = "${var.db_security_group_id}"
+  source_security_group_id = "${aws_security_group.app_security_group.id}"
+}
+
+# App -> DB
+resource "aws_security_group_rule" "from_app_to_db_egress_security_rule" {
+  type                     = "egress"
+  from_port                = "${var.db_port}"
+  to_port                  = "${var.db_port}"
+  protocol                 = "tcp"
+  security_group_id        = "${aws_security_group.app_security_group.id}"
+  source_security_group_id = "${var.db_security_group_id}"
+}
+
+---
+
+# vars.tf
+variable "env" {}
+variable "app_security_group_name" {}
+variable "db_security_group_id" {}
+variable "db_port" {}
+
+```
+
+</details>
+</p>
+
+<p>
+<details>
+<summary><strong>Main project</strong> `app-infrastructure/test/`</summary>
+  
+```
+# main.tf
+module "security-groups" {
+  source                  = "../modules/security-groups"
+  env                     = "${var.env}"
+  app_security_group_name = "${var.env}_${var.appname}_app_sg"
+  db_security_group_id    = "${module.db.db_security_group_id}"
+  db_port                 = "3306"
+}
+
+```
+
+</details>
+</p>
+
+## Update modules
+
+```
+envchain aws terraform get --update # OSX
+../../env.sh terraform get --update # Linux
+
+```
+## Plan and apply
+
+```
+# OSX
+envchain aws terraform-wrapper plan
+envchain aws terraform-wrapper apply
+# Linux
+../../env.sh terraform-wrapper plan
+../../env.sh terraform-wrapper apply
+
+```
+
+
+## Solution:
+
+```
+git checkout task6
+```
+
+# Task 6 - Elastic Beanstalk Application
+
+In this task we will configure an Elastic Beanstalk project and deploy an application.
+
