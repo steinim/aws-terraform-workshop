@@ -1196,9 +1196,9 @@ git checkout task6
 
 # Task 7 - Elastic Beanstalk Application
 
-In this task we will configure an Elastic Beanstalk project and deploy an application.
+In this task we will configure an Elastic Beanstalk project and deploy an application. We will do this as a walkthrough, so check out the solution: `git checkout task7`
 
-### Initialize th project
+### Initialize the project
 
 1. Go to the root of the project folder
 
@@ -1212,15 +1212,20 @@ In this task we will configure an Elastic Beanstalk project and deploy an applic
 * `CodeCommit? (y/N) (default is n): N`
 * `SSH: Y`
 * `Keypair 1) test`
-   
-4. Add a file called `.ebignore` with the following contents:
+
+## Create and deploy the application
+
+1. Build the Java app: `cd app && mvn clean install && cd -`
+2. ./create.sh test
+3. Browse to https://eu-west-2.console.aws.amazon.com/elasticbeanstalk/ to watch progress.
+4. Browse to http://test-helloworld.eu-west-2.elasticbeanstalk.com/
+
+# ‼️Terminate everything ‼️
 
 ```
-*
-.*
-!/app.zip
+envchain aws eb terminate test-helloworld
+cd app-infrastructure/test
+envchain aws terraform-wrapper destroy -force
+cd ../../infrastructure/test
+envchain aws terraform-wrapper destroy -force
 ```
-   
-5. Build the Java app: `cd app && mvn clean install && cd -`
-
-6. 
