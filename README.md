@@ -601,7 +601,7 @@ envchain aws terraform-wrapper apply
 git checkout task3
 ```
 
-# Task 3 - Bastion host
+# Task 4 - Bastion host
 
 In this task we will set up a bastion host and a security group allowing ssh access
 
@@ -803,7 +803,7 @@ envchain aws terraform-wrapper apply
 git checkout task4
 ```
 
-# Task 4 - Database
+# Task 5 - Database
 
 In this task we will set up a hosted database.
 
@@ -1071,7 +1071,7 @@ envchain aws terraform-wrapper apply
 git checkout task5
 ```
 
-# Task 5 - Security groups
+# Task 6 - Security groups
 
 In this task we will set up security groups between the bastion host and apps, and between apps and the database.
 
@@ -1188,14 +1188,39 @@ envchain aws terraform-wrapper apply
 
 ```
 
-
 ## Solution:
 
 ```
 git checkout task6
 ```
 
-# Task 6 - Elastic Beanstalk Application
+# Task 7 - Elastic Beanstalk Application
 
 In this task we will configure an Elastic Beanstalk project and deploy an application.
 
+### Initialize th project
+
+1. Go to the root of the project folder
+
+2. Type `envchain aws eb init`
+
+3. Answer the questions
+* `16) eu-west-2 : EU (London)`
+* `Application Name: helloworld`
+* `11) Java`
+* `1) Java 8`
+* `CodeCommit? (y/N) (default is n): N`
+* `SSH: Y`
+* `Keypair 1) test`
+   
+4. Add a file called `.ebignore` with the following contents:
+
+```
+*
+.*
+!/app.zip
+```
+   
+5. Build the Java app: `cd app && mvn clean install && cd -`
+
+6. 
