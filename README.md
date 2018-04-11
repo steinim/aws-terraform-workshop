@@ -1234,4 +1234,4 @@ envchain aws terraform-wrapper destroy -force
 cd ../../infrastructure/test
 envchain aws terraform-wrapper destroy -force
 ```
-NB❗️Also remember to delete your Elastic IP!
+NB❗️Also remember to release your Elastic IP!
