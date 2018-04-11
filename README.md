@@ -158,6 +158,11 @@ sudo easy_install pip # You may have to install Python, easy_install and pip
 pip install awscli awsebcli
 ```
 
+# Documentation
+
+https://www.terraform.io/docs/providers/aws/index.html
+
+
 # Task 1 - Getting started
 In this task we will initialize the Terraform environment and run our first plan
 
