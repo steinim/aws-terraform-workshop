@@ -270,6 +270,17 @@ variable "ig_name" {}
 variable "vpc_cidr" {}
 variable "route_destination_cidr_block" { default = "0.0.0.0/0" }
 
+---
+
+# outputs.tf
+output "vpc_id" {
+  value = "${aws_vpc.vpc.id}"
+}
+
+output "internet_gateway_id" {
+  value = "${aws_internet_gateway.ig.id}"
+}
+
 ```
 </details>
 </p>
